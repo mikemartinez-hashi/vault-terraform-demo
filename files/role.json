@@ -1,0 +1,11 @@
+{
+  "role_type": "jwt",
+  "bound_audiences": ["vault.workload.identity"],
+  "bound_claims_type": "glob",
+  "bound_claims": {
+    "sub": "organization:*:project:*:workspace:*:run_phase:*"
+  },
+  "user_claim": "terraform_workspace_id",
+  "token_policies": ["tfc-kv-policy"],
+  "token_ttl": 900
+}
