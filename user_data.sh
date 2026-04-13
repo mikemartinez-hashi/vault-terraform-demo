@@ -20,5 +20,4 @@ sudo cat <<EOF > /var/www/html/index.html
 <hr>
 <h2>Vault Secret Leakage Demo</h2>
 <p><strong>Legacy Fetch (Leaked to State File):</strong> $web_api_secret</p>
-<p><strong>Ephemeral Fetch (Zero-State Footprint):</strong> $backend_api_secret</p>
 EOF
