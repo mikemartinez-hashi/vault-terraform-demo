@@ -32,10 +32,10 @@ ephemeral "vault_kv_secret_v2" "backend_api" {
   name  = "premier_backend_api"
 }
 
-resource "terraform_data" "secret_consumed" {
-  # write_only accepts ephemeral values — never persisted to state
-  input = ephemeral.vault_kv_secret_v2.backend_api.data["backend_api_key"]
-}
+# resource "terraform_data" "secret_consumed" {
+#   # write_only accepts ephemeral values — never persisted to state
+#   input = ephemeral.vault_kv_secret_v2.backend_api.data["backend_api_key"]
+# }
 
 # Create an EC2 Instance
 resource "aws_instance" "web_server" {
