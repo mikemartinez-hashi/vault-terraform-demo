@@ -3,7 +3,7 @@ export instance_type="${instance_type}"
 export environment="${environment}"
 export region="${region}"
 export web_api_secret="${web_api_secret}"
-export backend_secret_id="${backend_secret_id}"
+# export backend_secret_id="${backend_secret_id}"
 
 # Update and install Apache + utilities
 sudo apt-get update -y

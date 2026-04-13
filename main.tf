@@ -32,9 +32,9 @@ ephemeral "vault_kv_secret_v2" "backend_api" {
   name  = "premier_backend_api"
 }
 
-resource "local_file" "ephemeral_secret_proof" {
-  content  = "Secret was retrieved successfully. Length: ${length(ephemeral.vault_kv_secret_v2.backend_api.data["backend_api_key"])} chars"
-  filename = "${path.module}/files/vault-demo-proof.txt"
+resource "terraform_data" "secret_consumed" {
+  # write_only accepts ephemeral values — never persisted to state
+  input = ephemeral.vault_kv_secret_v2.backend_api.data["backend_api_key"]
 }
 
 # Create an EC2 Instance
