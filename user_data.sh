@@ -3,7 +3,6 @@ export instance_type="${instance_type}"
 export environment="${environment}"
 export region="${region}"
 export web_api_secret="${web_api_secret}"
-export backend_api_secret="${backend_api_secret}"
 
 # Update and install Apache (Ubuntu uses apt + apache2, not yum + httpd)
 sudo apt-get update -y
