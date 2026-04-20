@@ -20,13 +20,13 @@ provider "vault" {
   # (TFC_VAULT_PROVIDER_AUTH, TFC_VAULT_NAMESPACE)
 }
 
-# LEAKY SECRET: Fetched conventionally. Will be stored in plain text inside the Terraform state file.
+# LEAKY SECRET: Fetched conventionally.
 data "vault_kv_secret_v2" "web_api" {
   mount = "kv"
   name  = "premier_web_api"
 }
 
-# SECURE SECRET: Fetched ephemerally. Does NOT get recorded into the state file (TF 1.10+ required)
+# SECURE SECRET: Fetched ephemerally. 
 ephemeral "vault_kv_secret_v2" "backend_api" {
   mount = "kv"
   name  = "premier_backend_api"
