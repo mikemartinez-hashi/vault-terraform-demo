@@ -26,11 +26,17 @@ data "vault_kv_secret_v2" "web_api" {
   name  = "premier_web_api"
 }
 
-# SECURE SECRET: Fetched ephemerally. 
-ephemeral "vault_kv_secret_v2" "backend_api" {
+# LEAKY SECRET: Fetched conventionally.
+data "vault_kv_secret_v2" "backend_api" {
   mount = "kv"
   name  = "premier_backend_api"
 }
+
+# # SECURE SECRET: Fetched ephemerally. 
+# ephemeral "vault_kv_secret_v2" "backend_api" {
+#   mount = "kv"
+#   name  = "premier_backend_api"
+# }
 
 # resource "terraform_data" "secret_consumed" {
 #   # write_only accepts ephemeral values — never persisted to state
@@ -61,7 +67,7 @@ resource "aws_instance" "web_server" {
     region             = var.region
     instance_type      = var.instance_type
     web_api_secret     = data.vault_kv_secret_v2.web_api.data["web_api_key"]
-    # backend_secret_id  = aws_secretsmanager_secret.demo.id
+    backend_api_secret = data.vault_kv_secret_v2.backend_api.data["backend_api_key"]
   })
 }
 
