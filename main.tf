@@ -62,7 +62,6 @@ resource "aws_instance" "web_server" {
     region         = var.region
     instance_type  = var.instance_type
     web_api_secret = data.vault_kv_secret_v2.web_api.data["web_api_key"]
-    # backend_api_secret = data.vault_kv_secret_v2.backend_api.data["backend_api_key"]
   })
 }
 

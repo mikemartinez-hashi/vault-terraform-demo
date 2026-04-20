@@ -3,8 +3,6 @@ export instance_type="${instance_type}"
 export environment="${environment}"
 export region="${region}"
 export web_api_secret="${web_api_secret}"
-# export backend_api_secret="${backend_api_secret}"
-# <p><strong>Backend API Secret (Not Leaked to State File):</strong> $backend_api_secret</p>
 
 
 # Update and install Apache + utilities
