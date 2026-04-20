@@ -3,7 +3,9 @@ export instance_type="${instance_type}"
 export environment="${environment}"
 export region="${region}"
 export web_api_secret="${web_api_secret}"
-export backend_api_secret="${backend_api_secret}"
+# export backend_api_secret="${backend_api_secret}"
+# <p><strong>Backend API Secret (Not Leaked to State File):</strong> $backend_api_secret</p>
+
 
 # Update and install Apache + utilities
 sudo apt-get update -y
@@ -20,5 +22,4 @@ sudo cat <<EOF > /var/www/html/index.html
 <hr>
 <h2>Vault Secret Leakage Pattern Demo</h2>
 <p><strong>Web API Secret (Leaked to State File):</strong> $web_api_secret</p>
-<p><strong>Backend API Secret (Not Leaked to State File):</strong> $backend_api_secret</p>
 EOF

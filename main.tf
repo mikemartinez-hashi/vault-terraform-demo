@@ -26,22 +26,17 @@ data "vault_kv_secret_v2" "web_api" {
   name  = "premier_web_api"
 }
 
-# LEAKY SECRET: Fetched conventionally.
-data "vault_kv_secret_v2" "backend_api" {
-  mount = "kv"
-  name  = "premier_backend_api"
-}
-
-# # SECURE SECRET: Fetched ephemerally. 
-# ephemeral "vault_kv_secret_v2" "backend_api" {
+# # LEAKY SECRET: Fetched conventionally.
+# data "vault_kv_secret_v2" "backend_api" {
 #   mount = "kv"
 #   name  = "premier_backend_api"
 # }
 
-# resource "terraform_data" "secret_consumed" {
-#   # write_only accepts ephemeral values — never persisted to state
-#   input = ephemeral.vault_kv_secret_v2.backend_api.data["backend_api_key"]
-# }
+# SECURE SECRET: Fetched ephemerally. 
+ephemeral "vault_kv_secret_v2" "backend_api" {
+  mount = "kv"
+  name  = "premier_backend_api"
+}
 
 # Create an EC2 Instance
 resource "aws_instance" "web_server" {
@@ -63,66 +58,13 @@ resource "aws_instance" "web_server" {
   }
 
   user_data = templatefile("${path.module}/user_data.sh", {
-    environment        = var.environment
-    region             = var.region
-    instance_type      = var.instance_type
-    web_api_secret     = data.vault_kv_secret_v2.web_api.data["web_api_key"]
-    backend_api_secret = data.vault_kv_secret_v2.backend_api.data["backend_api_key"]
+    environment    = var.environment
+    region         = var.region
+    instance_type  = var.instance_type
+    web_api_secret = data.vault_kv_secret_v2.web_api.data["web_api_key"]
+    # backend_api_secret = data.vault_kv_secret_v2.backend_api.data["backend_api_key"]
   })
 }
-
-# # --- EPHEMERAL SECRETS MANAGER INCORPORATION --- #
-# resource "aws_secretsmanager_secret" "demo" {
-#   name                    = "vault_backend_api_key_${var.environment}_${var.demo}"
-#   recovery_window_in_days = 0 # Force deletion immediately for demo purposes
-# }
-
-# resource "aws_secretsmanager_secret_version" "demo" {
-#   secret_id     = aws_secretsmanager_secret.demo.id
-# }
-
-# # IAM Role mapping so the EC2 Instance can fetch the secret natively at boot
-# resource "aws_iam_role" "web_role" {
-#   name = "web_role_ephemeral_${var.environment}"
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = "sts:AssumeRole"
-#         Effect = "Allow"
-#         Principal = {
-#           Service = "ec2.amazonaws.com"
-#         }
-#       }
-#     ]
-#   })
-# }
-
-# resource "aws_iam_policy" "secrets_policy" {
-#   name        = "secrets_policy_ephemeral_${var.environment}"
-#   description = "Allows reading the demo ephemeral secret"
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action   = "secretsmanager:GetSecretValue"
-#         Effect   = "Allow"
-#         Resource = aws_secretsmanager_secret.demo.arn
-#       }
-#     ]
-#   })
-# }
-
-# resource "aws_iam_role_policy_attachment" "attach_secrets" {
-#   role       = aws_iam_role.web_role.name
-#   policy_arn = aws_iam_policy.secrets_policy.arn
-# }
-
-# resource "aws_iam_instance_profile" "web_profile" {
-#   name = "web_profile_ephemeral_${var.environment}"
-#   role = aws_iam_role.web_role.name
-# }
-
 
 # Get AMI ID
 data "aws_ami" "hc-base-ubuntu-2404" {
